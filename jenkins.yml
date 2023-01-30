@@ -1,0 +1,35 @@
+- hosts: 20.232.190.61
+  #become: yes
+  remote_user: root
+  become_user: root
+  tasks:
+  - name: Descarga Jenkins
+    apt_key:
+      url: "https://pkg.jenkins.io/debian-stable/jenkins.io.key"
+      state: present
+    #become: yes
+  
+  - name: Asegurar configuración del repo
+    apt_repository: repo='deb https://pkg.jenkins.io/debian-stable binary/' state= present
+    #become: yes
+
+  - name: update cache de apt
+    apt:
+    update_cache: yes
+    state: latest
+
+  - name: instalar java
+    apt:
+      name: "openjdk-11-jdk"
+      state: present
+
+  - name: instalar jenkins
+    apt:
+      name: jenkins
+      state: latest
+
+  - name: iniciar jenkins
+    service:
+      name: jenkins
+      enabled: true
+      state: started
